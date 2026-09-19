@@ -19,6 +19,7 @@
     --paper-color: #f4ecd8;
     --ink-color: #3b2f1e;
     --accent-color: #8a1f1f;
+    --success-color: #2f5d34;
   }
 
   body.dark-mode {
@@ -26,6 +27,7 @@
     --paper-color: #2b2318;
     --ink-color: #d8c9a3;
     --accent-color: #c1440e;
+    --success-color: #6fae74;
   }
 
   body {
@@ -158,6 +160,23 @@
     background-color: var(--accent-color);
     color: var(--paper-color);
   }
+
+  .confirmation {
+    display: none;
+    text-align: center;
+    margin-top: 20px;
+    padding: 8px;
+    border: 2px dashed var(--success-color);
+    color: var(--success-color);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 14px;
+    transform: rotate(-1deg);
+  }
+
+  .confirmation.show {
+    display: block;
+  }
 </style>
 
 </head>
@@ -196,6 +215,9 @@
       </div>
 
       <button type="submit" class="stamp-button">Purchase</button>
+
+      <!-- Shown briefly after purchase, via JS below -->
+      <div id="purchaseConfirmation" class="confirmation">Tokens Purchased!</div>
     </form>
 
   </div>
@@ -204,7 +226,19 @@
 <script>
   document.getElementById("buyTokensForm").addEventListener("submit", function (event) {
     event.preventDefault();
-    console.log("Tokens requested:", document.getElementById("tokenAmount").value);
+
+    const amount = document.getElementById("tokenAmount").value;
+    console.log("Tokens requested:", amount);
+
+    // Show a confirmation naming the amount entered, then hide it after 3 seconds
+    const confirmation = document.getElementById("purchaseConfirmation");
+    confirmation.textContent = amount ? "Purchased " + amount + " Tokens!" : "Tokens Purchased!";
+    confirmation.classList.add("show");
+    setTimeout(function () {
+      confirmation.classList.remove("show");
+    }, 3000);
+
+    event.target.reset();
   });
 </script>
 

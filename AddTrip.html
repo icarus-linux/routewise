@@ -20,6 +20,7 @@
     --paper-color: #f4ecd8;
     --ink-color: #3b2f1e;
     --accent-color: #8a1f1f;
+    --success-color: #2f5d34;
   }
 
   body.dark-mode {
@@ -27,6 +28,7 @@
     --paper-color: #2b2318;
     --ink-color: #d8c9a3;
     --accent-color: #c1440e;
+    --success-color: #6fae74;
   }
 
   body {
@@ -150,6 +152,27 @@
     background-color: var(--accent-color);
     color: var(--paper-color);
   }
+
+  /* 
+    Confirmation message shown briefly after "submitting" a trip. 
+    Hidden by default; the .show class (added by JS) reveals it.
+  */
+  .confirmation {
+    display: none;
+    text-align: center;
+    margin-top: 20px;
+    padding: 8px;
+    border: 2px dashed var(--success-color);
+    color: var(--success-color);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 14px;
+    transform: rotate(-1deg);
+  }
+
+  .confirmation.show {
+    display: block;
+  }
 </style>
 
 </head>
@@ -211,6 +234,9 @@
 
       <button type="submit" class="stamp-button">Submit Trip</button>
 
+      <!-- Shown briefly after submit, via JS below -->
+      <div id="tripConfirmation" class="confirmation">Trip Logged!</div>
+
     </form>
   </div>
 </div>
@@ -228,6 +254,16 @@
       startTime: document.getElementById("startTime").value,
       finishTime: document.getElementById("finishTime").value
     });
+
+    // Show the "Trip Logged!" confirmation, then hide it again after 3 seconds
+    const confirmation = document.getElementById("tripConfirmation");
+    confirmation.classList.add("show");
+    setTimeout(function () {
+      confirmation.classList.remove("show");
+    }, 3000);
+
+    // Clears the form fields, since a real submission would start fresh next time
+    event.target.reset();
   });
 </script>
 

@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Al's Logistical Dashboard</title>
+<title>Al's Logistical - Dashboard</title>
 
 <!-- Retro stamp-style tab icon -->
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -99,6 +99,15 @@
     border-bottom: 1px solid var(--ink-color);
     padding-bottom: 12px;
     margin-bottom: 30px;
+  }
+
+  /* Small dateline, styled like the top of an old letter/document */
+  .dateline {
+    text-align: right;
+    font-size: 12px;
+    font-style: italic;
+    opacity: 0.75;
+    margin-bottom: 10px;
   }
 
   /* ---------- STAT CARDS ---------- */
@@ -225,6 +234,7 @@
 </div>
 
 <div class="content">
+  <div class="dateline" id="dateline"></div>
   <h1>Dashboard</h1>
 
   <div class="stat-row">
@@ -278,6 +288,20 @@
   </div>
 
 </div>
+
+<script>
+  /*
+    Fills in today's date in the dateline at the top of the page.
+    Written out manually (rather than relying on toLocaleDateString) 
+    so the format stays consistent regardless of the browser's 
+    locale settings - always "DD Month YYYY".
+  */
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+  const today = new Date();
+  document.getElementById("dateline").textContent =
+    today.getDate() + " " + monthNames[today.getMonth()] + " " + today.getFullYear();
+</script>
 
 </body>
 </html>
