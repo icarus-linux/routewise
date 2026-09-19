@@ -1,72 +1,212 @@
 <!-- 
   BuyTokens.html
-  Page for purchasing tokens. Current balance and price are 
-  shown as placeholders since there's no backend logic yet.
+  Page for purchasing tokens. Ribbon nav now links to real pages, 
+  and colors use the shared theme variables.
 -->
 <!DOCTYPE html>
 <html>
 <head>
-<title>Al's logistical Buy Tokens</title>
+<title>Al's Logistical - Buy Tokens</title>
+
+<!-- Retro stamp-style tab icon -->
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
 
 <style>
-  body {
-    margin: 0;
+  :root {
+    --bg-color: #ece0c8;
+    --paper-color: #f4ecd8;
+    --ink-color: #3b2f1e;
+    --accent-color: #8a1f1f;
   }
 
-  /* Same ribbon styling as Dashboard.html - kept identical across pages */
+  body.dark-mode {
+    --bg-color: #1b1712;
+    --paper-color: #2b2318;
+    --ink-color: #d8c9a3;
+    --accent-color: #c1440e;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--bg-color);
+    font-family: 'Special Elite', 'Courier New', monospace;
+    color: var(--ink-color);
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  /* ---------- RIBBON NAV ---------- */
   .ribbon {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    background-color: #ddd;
-    border-bottom: 1px solid black;
-    padding: 10px 0;
+    gap: 12px;
+    background-color: var(--paper-color);
+    border-bottom: 2px solid var(--ink-color);
+    padding: 12px 0;
+    flex-wrap: wrap;
   }
 
-  .ribbon div {
+  .ribbon a {
     cursor: pointer;
+    border: 1px solid var(--ink-color);
+    padding: 6px 14px;
+    background-color: var(--bg-color);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    transition: background-color 0.2s, color 0.2s;
+    text-decoration: none;
+    color: var(--ink-color);
+  }
+
+  .ribbon a:hover {
+    background-color: var(--ink-color);
+    color: var(--bg-color);
+  }
+
+  /* ---------- PAGE CONTENT WRAPPER ---------- */
+  .content {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px 20px;
+  }
+
+  .content h1 {
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 1px solid var(--ink-color);
+    padding-bottom: 12px;
+    margin-bottom: 30px;
+  }
+
+  /* ---------- CARD ---------- */
+  .paper {
+    background-color: var(--paper-color);
+    border: 2px solid var(--ink-color);
+    outline: 1px solid var(--ink-color);
+    outline-offset: 6px;
+    padding: 30px 40px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .detail {
+    margin-bottom: 20px;
+    border-bottom: 1px dashed var(--ink-color);
+    padding-bottom: 8px;
+  }
+
+  .detail label {
+    display: block;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .detail .value {
+    font-size: 15px;
+  }
+
+  .field {
+    margin-bottom: 20px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .field input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px dashed var(--ink-color);
+    background: transparent;
+    font-family: 'Special Elite', 'Courier New', monospace;
+    font-size: 15px;
+    color: var(--ink-color);
+    padding: 4px 2px;
+    box-sizing: border-box;
+  }
+
+  .field input:focus {
+    outline: none;
+    border-bottom: 1px solid var(--ink-color);
+  }
+
+  .stamp-button {
+    display: block;
+    margin: 25px auto 0;
+    padding: 10px 30px;
+    background-color: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    font-family: 'Special Elite', 'Courier New', monospace;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transform: rotate(-2deg);
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .stamp-button:hover {
+    background-color: var(--accent-color);
+    color: var(--paper-color);
   }
 </style>
 
 </head>
 <body>
 
-<!-- Top navigation ribbon, same as all other pages -->
+<script src="theme.js"></script>
+
 <div class="ribbon">
-  <div>Create new route</div>
-  <div>View Logs</div>
-  <div>View Account</div>
-  <div>View Tokens</div>
-  <div>Toggle Light / Dark Mode</div>
-  <div>Logout</div>
+  <a href="AddTrip.html">Create New Route</a>
+  <a href="Logs.html">View Logs</a>
+  <a href="Account.html">View Account</a>
+  <a href="BuyTokens.html">View Tokens</a>
+  <a href="#" onclick="toggleTheme(); return false;">Toggle Light / Dark Mode</a>
+  <a href="index.html">Logout</a>
 </div>
 
-<!-- Main page content -->
-<div style="padding: 20px;">
-  <h2>Buy Tokens</h2>
+<div class="content">
+  <h1>Buy Tokens</h1>
 
-  <table border="1">
-    <tr>
-      <!-- Displayed value, not an input - the user doesn't type their own balance -->
-      <td>Current Balance</td>
-      <td>placeholder</td>
-    </tr>
-    <tr>
-      <td>Tokens to Buy</td>
-      <!-- The one field the user actually enters a value into -->
-      <td><input type="number" name="tokenAmount"></td>
-    </tr>
-    <tr>
-      <!-- Also a displayed value, would update based on Tokens to Buy once logic is added -->
-      <td>Price</td>
-      <td>placeholder</td>
-    </tr>
-    <tr>
-      <!-- type="button" - no logic to submit to yet -->
-      <td colspan="2"><button type="button">Purchase</button></td>
-    </tr>
-  </table>
+  <div class="paper">
+
+    <div class="detail">
+      <label>Current Balance</label>
+      <div class="value">placeholder</div>
+    </div>
+
+    <form id="buyTokensForm">
+      <div class="field">
+        <label for="tokenAmount">Tokens to Buy</label>
+        <input type="number" name="tokenAmount" id="tokenAmount">
+      </div>
+
+      <div class="detail">
+        <label>Price</label>
+        <div class="value">placeholder</div>
+      </div>
+
+      <button type="submit" class="stamp-button">Purchase</button>
+    </form>
+
+  </div>
 </div>
+
+<script>
+  document.getElementById("buyTokensForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+    console.log("Tokens requested:", document.getElementById("tokenAmount").value);
+  });
+</script>
 
 </body>
 </html>

@@ -1,51 +1,283 @@
 <!-- 
   Dashboard.html
-  Landing page after login. Shows the top navigation ribbon,
-  used by every other page in this app for consistency.
+  Landing page after login. Ribbon items now link to real pages, 
+  and the "Toggle Light / Dark Mode" item calls toggleTheme() 
+  from the shared theme.js file.
 -->
 <!DOCTYPE html>
 <html>
 <head>
-<title>Al's logistical Dashboard</title>
+<title>Al's Logistical Dashboard</title>
+
+<!-- Retro stamp-style tab icon -->
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
 
 <style>
+  /* 
+    ---------- THEME VARIABLES ----------
+    See index.html for the full explanation - :root is the default 
+    light/paper theme, .dark-mode overrides it with a dark palette.
+  */
+  :root {
+    --bg-color: #ece0c8;
+    --paper-color: #f4ecd8;
+    --ink-color: #3b2f1e;
+    --accent-color: #8a1f1f;
+    --map-color: #e4d5ac;
+    --status-active: #2f5d34;
+    --status-idle: #8a6d1f;
+    --status-stopped: #8a1f1f;
+  }
+
+  body.dark-mode {
+    --bg-color: #1b1712;
+    --paper-color: #2b2318;
+    --ink-color: #d8c9a3;
+    --accent-color: #c1440e;
+    --map-color: #241d14;
+    --status-active: #6fae74;
+    --status-idle: #d4af37;
+    --status-stopped: #d9534f;
+  }
+
   body {
-    margin: 0; /* removes default browser spacing */
+    margin: 0;
+    background-color: var(--bg-color);
+    font-family: 'Special Elite', 'Courier New', monospace;
+    color: var(--ink-color);
+    transition: background-color 0.2s, color 0.2s;
   }
 
-  /* The horizontal navigation bar across the top of the page */
+  /* ---------- RIBBON NAV ---------- */
   .ribbon {
-    display: flex;            /* lays out the child divs side-by-side instead of stacked */
-    justify-content: center;  /* centers the nav items horizontally within the ribbon */
-    gap: 20px;                 /* space between each nav item */
-    background-color: #ddd;    /* light grey background so the ribbon is visible */
-    border-bottom: 1px solid black; /* separates the ribbon from the page content below */
-    padding: 10px 0;           /* vertical padding above/below the nav items */
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    background-color: var(--paper-color);
+    border-bottom: 2px solid var(--ink-color);
+    padding: 12px 0;
+    flex-wrap: wrap;
   }
 
-  /* Makes each nav item show a pointer/hand cursor on hover, hinting it's clickable */
-  .ribbon div {
+  /* 
+    Ribbon items are <a> tags (real links) now instead of plain 
+    divs, since most of them navigate to another page. 
+    text-decoration/color resets remove the browser's default 
+    blue underlined link styling so they keep looking like tabs.
+  */
+  .ribbon a {
     cursor: pointer;
+    border: 1px solid var(--ink-color);
+    padding: 6px 14px;
+    background-color: var(--bg-color);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    transition: background-color 0.2s, color 0.2s;
+    text-decoration: none;
+    color: var(--ink-color);
+  }
+
+  .ribbon a:hover {
+    background-color: var(--ink-color);
+    color: var(--bg-color);
+  }
+
+  /* ---------- PAGE CONTENT WRAPPER ---------- */
+  .content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px;
+  }
+
+  .content h1 {
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 1px solid var(--ink-color);
+    padding-bottom: 12px;
+    margin-bottom: 30px;
+  }
+
+  /* ---------- STAT CARDS ---------- */
+  .stat-row {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 35px;
+  }
+
+  .stat-card {
+    background-color: var(--paper-color);
+    border: 2px solid var(--ink-color);
+    outline: 1px solid var(--ink-color);
+    outline-offset: 4px;
+    padding: 15px 25px;
+    text-align: center;
+    min-width: 120px;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .stat-card .count {
+    font-size: 28px;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .stat-card .label {
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  /* ---------- ACTIVE TRIPS LEDGER ---------- */
+  .ledger {
+    background-color: var(--paper-color);
+    border: 2px solid var(--ink-color);
+    padding: 20px 25px;
+    margin-bottom: 35px;
+  }
+
+  .ledger h2 {
+    text-transform: uppercase;
+    font-size: 16px;
+    letter-spacing: 1px;
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+
+  .ledger table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .ledger td, .ledger th {
+    text-align: left;
+    padding: 8px 6px;
+    border-bottom: 1px dashed var(--ink-color);
+    font-size: 14px;
+  }
+
+  .ledger th {
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  /* Status text colored per-status, using the theme-aware status variables */
+  .status-active { color: var(--status-active); }
+  .status-idle { color: var(--status-idle); }
+  .status-stopped { color: var(--status-stopped); }
+
+  /* ---------- VINTAGE MAP PLACEHOLDER ---------- */
+  .map-placeholder {
+    background-color: var(--map-color);
+    border: 2px solid var(--ink-color);
+    outline: 1px solid var(--ink-color);
+    outline-offset: 4px;
+    height: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.15);
+    background-image:
+      repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(59,47,30,0.06) 20px, rgba(59,47,30,0.06) 21px),
+      repeating-linear-gradient(-45deg, transparent, transparent 20px, rgba(59,47,30,0.06) 20px, rgba(59,47,30,0.06) 21px);
+  }
+
+  .map-placeholder .map-title {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .map-placeholder .map-note {
+    font-size: 12px;
+    font-style: italic;
+    opacity: 0.75;
   }
 </style>
 
 </head>
 <body>
 
-<!-- Top navigation ribbon - repeated identically on every page for consistent navigation -->
-<div class="ribbon">
-  <div>Create new route</div>
-  <div>View Logs</div>
-  <div>View Account</div>
-  <div>View Tokens</div>
-  <div>Toggle Light / Dark Mode</div>
-  <div>Logout</div>
-</div>
+<!-- Applies any saved dark mode preference before the page finishes rendering -->
+<script src="theme.js"></script>
 
 <!-- 
-  Dashboard body content goes here - this is where an overview 
-  (e.g. active/idle/stopped trip counts) would eventually live 
+  Top navigation ribbon. Each item now links to a real page, 
+  except Toggle (which calls toggleTheme() instead of navigating) 
+  and Logout (which sends the user back to the login page).
 -->
+<div class="ribbon">
+  <a href="AddTrip.html">Create New Route</a>
+  <a href="Logs.html">View Logs</a>
+  <a href="Account.html">View Account</a>
+  <a href="BuyTokens.html">View Tokens</a>
+  <a href="#" onclick="toggleTheme(); return false;">Toggle Light / Dark Mode</a>
+  <a href="index.html">Logout</a>
+</div>
+
+<div class="content">
+  <h1>Dashboard</h1>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <span class="count">3</span>
+      <span class="label">Active</span>
+    </div>
+    <div class="stat-card">
+      <span class="count">1</span>
+      <span class="label">Idle</span>
+    </div>
+    <div class="stat-card">
+      <span class="count">2</span>
+      <span class="label">Stopped</span>
+    </div>
+  </div>
+
+  <div class="ledger">
+    <h2>Active Trips</h2>
+    <table>
+      <tr>
+        <th>Driver</th>
+        <th>Truck ID</th>
+        <th>Route</th>
+        <th>Status</th>
+      </tr>
+      <tr>
+        <td>J. Botha</td>
+        <td>TRK-014</td>
+        <td>Johannesburg &rarr; Durban</td>
+        <td class="status-active">Active</td>
+      </tr>
+      <tr>
+        <td>R. Naidoo</td>
+        <td>TRK-022</td>
+        <td>Cape Town &rarr; Bloemfontein</td>
+        <td class="status-active">Active</td>
+      </tr>
+      <tr>
+        <td>T. Marx</td>
+        <td>TRK-007</td>
+        <td>Pretoria &rarr; Polokwane</td>
+        <td class="status-active">Active</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="map-placeholder">
+    <div class="map-title">Route Map</div>
+    <div class="map-note">(map view coming soon)</div>
+  </div>
+
+</div>
 
 </body>
 </html>

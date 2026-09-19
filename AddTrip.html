@@ -1,94 +1,235 @@
 <!-- 
   AddTrip.html
-  Form for logging a new trip. Fields match what the original 
-  Python truck tracker script records (driver, truck ID, route, 
-  min/max temp, start/finish time).
+  Form for logging a new trip. Ribbon nav now links to real pages, 
+  and colors use the shared theme variables (see index.html for 
+  the full explanation of the light/dark variable setup).
 -->
 <!DOCTYPE html>
 <html>
 <head>
-<title>Al's logistical Add Trip</title>
+<title>Al's Logistical - Add Trip</title>
+
+<!-- Retro stamp-style tab icon -->
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
 
 <style>
-  body {
-    margin: 0;
+  :root {
+    --bg-color: #ece0c8;
+    --paper-color: #f4ecd8;
+    --ink-color: #3b2f1e;
+    --accent-color: #8a1f1f;
   }
 
-  /* Same ribbon styling as Dashboard.html - kept identical across pages */
+  body.dark-mode {
+    --bg-color: #1b1712;
+    --paper-color: #2b2318;
+    --ink-color: #d8c9a3;
+    --accent-color: #c1440e;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--bg-color);
+    font-family: 'Special Elite', 'Courier New', monospace;
+    color: var(--ink-color);
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  /* ---------- RIBBON NAV ---------- */
   .ribbon {
     display: flex;
     justify-content: center;
-    gap: 20px;
-    background-color: #ddd;
-    border-bottom: 1px solid black;
-    padding: 10px 0;
+    gap: 12px;
+    background-color: var(--paper-color);
+    border-bottom: 2px solid var(--ink-color);
+    padding: 12px 0;
+    flex-wrap: wrap;
   }
 
-  .ribbon div {
+  .ribbon a {
     cursor: pointer;
+    border: 1px solid var(--ink-color);
+    padding: 6px 14px;
+    background-color: var(--bg-color);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    transition: background-color 0.2s, color 0.2s;
+    text-decoration: none;
+    color: var(--ink-color);
+  }
+
+  .ribbon a:hover {
+    background-color: var(--ink-color);
+    color: var(--bg-color);
+  }
+
+  /* ---------- PAGE CONTENT WRAPPER ---------- */
+  .content {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px 20px;
+  }
+
+  .content h1 {
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 1px solid var(--ink-color);
+    padding-bottom: 12px;
+    margin-bottom: 30px;
+  }
+
+  /* ---------- FORM CARD ---------- */
+  .paper {
+    background-color: var(--paper-color);
+    border: 2px solid var(--ink-color);
+    outline: 1px solid var(--ink-color);
+    outline-offset: 6px;
+    padding: 30px 40px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .field {
+    margin-bottom: 20px;
+  }
+
+  .field label {
+    display: block;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .field input {
+    width: 100%;
+    border: none;
+    border-bottom: 1px dashed var(--ink-color);
+    background: transparent;
+    font-family: 'Special Elite', 'Courier New', monospace;
+    font-size: 15px;
+    color: var(--ink-color);
+    padding: 4px 2px;
+    box-sizing: border-box;
+  }
+
+  .field input:focus {
+    outline: none;
+    border-bottom: 1px solid var(--ink-color);
+  }
+
+  .field-pair {
+    display: flex;
+    gap: 20px;
+  }
+
+  .field-pair .field {
+    flex: 1;
+  }
+
+  .stamp-button {
+    display: block;
+    margin: 25px auto 0;
+    padding: 10px 30px;
+    background-color: transparent;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    font-family: 'Special Elite', 'Courier New', monospace;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transform: rotate(-2deg);
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .stamp-button:hover {
+    background-color: var(--accent-color);
+    color: var(--paper-color);
   }
 </style>
 
 </head>
 <body>
 
-<!-- Top navigation ribbon, same as all other pages -->
+<script src="theme.js"></script>
+
 <div class="ribbon">
-  <div>Create new route</div>
-  <div>View Logs</div>
-  <div>View Account</div>
-  <div>View Tokens</div>
-  <div>Toggle Light / Dark Mode</div>
-  <div>Logout</div>
+  <a href="AddTrip.html">Create New Route</a>
+  <a href="Logs.html">View Logs</a>
+  <a href="Account.html">View Account</a>
+  <a href="BuyTokens.html">View Tokens</a>
+  <a href="#" onclick="toggleTheme(); return false;">Toggle Light / Dark Mode</a>
+  <a href="index.html">Logout</a>
 </div>
 
-<!-- Main page content -->
-<div style="padding: 20px;">
-  <h2>Add New Trip</h2>
+<div class="content">
+  <h1>Add New Trip</h1>
 
-  <form>
-    <table border="1">
-      <tr>
-        <td>Driver Name</td>
-        <td><input type="text" name="driver"></td>
-      </tr>
-      <tr>
-        <td>Truck ID</td>
-        <td><input type="text" name="truckId"></td>
-      </tr>
-      <tr>
-        <td>Route</td>
-        <td><input type="text" name="route"></td>
-      </tr>
-      <tr>
-        <td>Min Temp</td>
-        <!-- type="number" restricts input to numeric values -->
-        <td><input type="number" name="minTemp"></td>
-      </tr>
-      <tr>
-        <td>Max Temp</td>
-        <td><input type="number" name="maxTemp"></td>
-      </tr>
-      <tr>
-        <td>Start Time</td>
-        <!-- type="time" gives a native time picker instead of free text -->
-        <td><input type="time" name="startTime"></td>
-      </tr>
-      <tr>
-        <td>Finish Time</td>
-        <td><input type="time" name="finishTime"></td>
-      </tr>
-      <tr>
-        <!-- 
-          type="button" (not "submit") - this avoids triggering the 
-          browser's default form-submission behavior, since there's 
-          no logic wired up yet to handle the submitted data. 
-        -->
-        <td colspan="2"><button type="button">Submit Trip</button></td>
-      </tr>
-    </table>
-  </form>
+  <div class="paper">
+    <form id="addTripForm">
+
+      <div class="field">
+        <label for="driver">Driver Name</label>
+        <input type="text" name="driver" id="driver">
+      </div>
+
+      <div class="field">
+        <label for="truckId">Truck ID</label>
+        <input type="text" name="truckId" id="truckId">
+      </div>
+
+      <div class="field">
+        <label for="route">Route</label>
+        <input type="text" name="route" id="route">
+      </div>
+
+      <div class="field-pair">
+        <div class="field">
+          <label for="minTemp">Min Temp</label>
+          <input type="number" name="minTemp" id="minTemp">
+        </div>
+        <div class="field">
+          <label for="maxTemp">Max Temp</label>
+          <input type="number" name="maxTemp" id="maxTemp">
+        </div>
+      </div>
+
+      <div class="field-pair">
+        <div class="field">
+          <label for="startTime">Start Time</label>
+          <input type="time" name="startTime" id="startTime">
+        </div>
+        <div class="field">
+          <label for="finishTime">Finish Time</label>
+          <input type="time" name="finishTime" id="finishTime">
+        </div>
+      </div>
+
+      <button type="submit" class="stamp-button">Submit Trip</button>
+
+    </form>
+  </div>
 </div>
+
+<script>
+  document.getElementById("addTripForm").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    console.log("New trip submitted:", {
+      driver: document.getElementById("driver").value,
+      truckId: document.getElementById("truckId").value,
+      route: document.getElementById("route").value,
+      minTemp: document.getElementById("minTemp").value,
+      maxTemp: document.getElementById("maxTemp").value,
+      startTime: document.getElementById("startTime").value,
+      finishTime: document.getElementById("finishTime").value
+    });
+  });
+</script>
 
 </body>
 </html>
